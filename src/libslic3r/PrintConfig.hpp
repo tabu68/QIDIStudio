@@ -70,6 +70,26 @@ enum PrintHostType {
     htPrusaLink, htOctoPrint, htDuet, htFlashAir, htAstroBox, htRepetier, htMKS, htMoonraker
 };
 
+// Orca: wave-overhang ring spacing mode.
+enum WaveOverhangSpacingMode {
+    wosmUniform,
+    wosmProgressive
+};
+
+// Orca: wave-overhang inter-ring seam direction mode.
+enum WaveOverhangSeamMode {
+    woseAlternating,
+    woseAligned,
+    woseRandom
+};
+
+// Wave-overhang fill pattern (ported from stmcculloch alpha.6).
+enum class WaveOverhangPattern : int {
+    Monotonic,
+    ZigZag,
+    Smart
+};
+
 enum AuthorizationType {
     atKeyPassword, atUserPassword
 };
@@ -373,9 +393,9 @@ enum ReduceInfillRetractionMode {
 };
 
 // QDS: filament metal stickiness level (used in Auto mode of reduce_infill_retraction)
-// None means untested/custom filament °™ treated as Low for backward compatibility.
+// None means untested/custom filament ‚Äî treated as Low for backward compatibility.
 enum FilamentMetalStickiness {
-    fmsNone = 0,    // Not specified / untested °™ behaves like Low for reduce_infill_retraction
+    fmsNone = 0,    // Not specified / untested ‚Äî behaves like Low for reduce_infill_retraction
     fmsLow,         // Low metal stickiness (e.g. PLA) - reduce infill retraction is beneficial
     fmsMedium,      // Medium metal stickiness
     fmsHigh         // High metal stickiness (e.g. PETG) - retraction should not be skipped
@@ -387,7 +407,7 @@ inline bool is_auto_filament_map_mode(FilamentMapMode mode) {
 
 extern std::string get_extruder_variant_string(ExtruderType extruder_type, NozzleVolumeType nozzle_volume_type);
 
-// ◊Óª˘¥°µƒ≤Œ ˝idx≤È’“∑Ω∑®£¨±È¿˙varint list—∞’“∂‘”¶µƒidx
+// ÊúÄÂü∫Á°ÄÁöÑÂèÇÊï∞idxÊü•ÊâæÊñπÊ≥ïÔºåÈÅçÂéÜvarint listÂØªÊâæÂØπÂ∫îÁöÑidx
 extern int get_config_index_base(NozzleVolumeType volume_type, ExtruderType extruder_type, int variant_id_1based, const std::vector<std::string>& variant_list, const std::vector<int>& variant_ids_1based);
 
 
@@ -1093,6 +1113,45 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionBool, detect_overhang_wall))
     ((ConfigOptionBool, smooth_speed_discontinuity_area))
     ((ConfigOptionFloat, smooth_coefficient))
+    // Wave Overhangs
+    ((ConfigOptionBool,                 wave_overhangs))
+    ((ConfigOptionBool,                 wave_overhangs_instead_of_bridges))
+    ((ConfigOptionInt,                  wave_overhang_outer_perimeters))
+    ((ConfigOptionFloat,                wave_overhang_perimeter_overlap))
+    ((ConfigOptionFloat,                wave_overhang_minimum_width))
+    ((ConfigOptionEnum<WaveOverhangPattern>, wave_overhang_pattern))
+    ((ConfigOptionFloat,                wave_overhang_line_spacing))
+    ((ConfigOptionFloat,                wave_overhang_flow_mm3_per_mm))
+    ((ConfigOptionFloat,                wave_overhang_print_speed))
+    ((ConfigOptionFloat,                wave_overhang_perimeter_speed))
+    ((ConfigOptionFloat,                wave_overhang_travel_speed))
+    ((ConfigOptionInt,                  wave_overhang_fan_speed))
+    ((ConfigOptionInt,                  wave_overhang_aux_fan_speed))
+    ((ConfigOptionInt,                       wave_overhang_floor_layers))
+    ((ConfigOptionBool,                      wave_overhang_floor_use_hilbert))
+    ((ConfigOptionInt,                       wave_overhang_floor_hilbert_layers))
+    ((ConfigOptionInt,                       wave_overhang_floor_hilbert_density))
+    ((ConfigOptionFloat,                     wave_overhang_floor_print_speed))
+    ((ConfigOptionFloat,                     wave_overhang_floor_perimeter_speed))
+    ((ConfigOptionInt,                       wave_overhang_floor_speed_ramp))
+    ((ConfigOptionInt,                       wave_overhang_floor_fan_speed))
+    ((ConfigOptionInt,                       wave_overhang_floor_aux_fan_speed))
+    ((ConfigOptionInt,                       wave_overhang_nozzle_temp))
+    ((ConfigOptionFloat,                     wave_overhang_min_wave_time))
+    ((ConfigOptionFloat,                     wave_overhang_min_layer_time))
+    ((ConfigOptionFloat,                     wave_overhang_min_angle))
+    ((ConfigOptionEnum<WaveOverhangSpacingMode>, wave_overhang_spacing_mode))
+    ((ConfigOptionEnum<WaveOverhangSeamMode>,    wave_overhang_seam_mode))
+    ((ConfigOptionBool,                      wave_overhang_debug_gcode))
+    ((ConfigOptionFloat,                     wave_overhang_min_length))
+    ((ConfigOptionInt,                       wave_overhang_max_iterations))
+    ((ConfigOptionFloat,                     wave_overhang_min_new_area))
+    ((ConfigOptionBool,                      wave_overhang_corner_taper_enable))
+    ((ConfigOptionFloat,                     wave_overhang_line_spacing_corner))
+    ((ConfigOptionFloat,                     wave_overhang_corner_taper_distance))
+    ((ConfigOptionFloat,                     wave_overhang_corner_angle_threshold))
+    ((ConfigOptionFloat,                     wave_overhang_end_retract_length))
+    ((ConfigOptionBool,                      support_remaining_areas_after_wave_overhangs))
     ((ConfigOptionInt, wall_filament))
     ((ConfigOptionFloat, inner_wall_line_width))
     ((ConfigOptionFloatsNullable, inner_wall_speed))
@@ -1996,7 +2055,7 @@ static void set_flush_volumes_matrix(std::vector<T> &out_matrix, const std::vect
 
 size_t get_extruder_index(const GCodeConfig& config, unsigned int filament_id);
 
-// ¥”GCode Config÷–µ˜”√ª˘¥°µƒ≤Œ ˝idx≤È’“∑Ω∑®
+// ‰ªéGCode Config‰∏≠Ë∞ÉÁî®Âü∫Á°ÄÁöÑÂèÇÊï∞idxÊü•ÊâæÊñπÊ≥ï
 size_t get_process_config_idx(const GCodeConfig &config, unsigned int filament_id);
 size_t get_filament_config_idx(const GCodeConfig& config, unsigned int filament_id);
 
