@@ -674,13 +674,6 @@ add_subdirectory(GUI/DeviceWeb)
 
 if(QDT_RELEASE_TO_PUBLIC)
 	list(APPEND SLIC3R_GUI_SOURCES
-			QIDI/QIDINetwork.cpp
-			QIDI/QIDINetwork.hpp
-			QIDI/QIDINetworkTypes.hpp
-			QIDI/QIDISSEClientV2.cpp
-			QIDI/QIDISSEClientV2.hpp
-            QIDI/P2PManager.cpp
-		    QIDI/P2PManager.hpp
 		)
 endif ()
 
