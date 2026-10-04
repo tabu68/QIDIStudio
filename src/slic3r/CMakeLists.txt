@@ -241,8 +241,6 @@ set(SLIC3R_GUI_SOURCES
     GUI/DownloadManager.hpp
     GUI/QDSDeviceManager.cpp
     GUI/QDSDeviceManager.hpp
-    QIDI/UserPresetSyncManager.cpp
-    QIDI/UserPresetSyncManager.hpp
     GUI/BedShapeDialog.cpp
     GUI/BedShapeDialog.hpp
     GUI/Plater.cpp
@@ -744,7 +742,7 @@ target_include_directories(libslic3r_gui PRIVATE Utils)
 #set(WEBSOCKETPP_INSTALL_DIR ${CMAKE_PREFIX_PATH})
 #target_include_directories(libslic3r_gui ${CMAKE_PREFIX_PATH}/include)
 
-# pgLibConnect Í·ÎÄ¼şÆ½Ì¨ÎŞ¹Ø£¬ÈıÆ½Ì¨¾ùÌá¹©£¨Windows/MacOSX/Ubuntu£©
+# pgLibConnect å¤´æ–‡ä»¶å¹³å°æ— å…³ï¼Œä¸‰å¹³å°å‡æä¾›ï¼ˆWindows/MacOSX/Ubuntuï¼‰
 target_include_directories(libslic3r_gui PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../deps/pgLibConnect/Include)
 
 if (WIN32)
@@ -756,12 +754,12 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SLIC3R_GUI_SOURCES})
 encoding_check(libslic3r_gui)
 
 target_link_libraries(libslic3r_gui libslic3r cereal imgui imguizmo minilzo GLEW::GLEW OpenGL::GL hidapi ${wxWidgets_LIBRARIES} glfw libcurl OpenSSL::SSL OpenSSL::Crypto)
-# pgLibConnect °´Æ½Ì¨Á´½Ó£¨Windows: µ¼Èë¿â£»macOS/Linux: ¾²Ì¬¿â£©
+# pgLibConnect æŒ‰å¹³å°é“¾æ¥ï¼ˆWindows: å¯¼å…¥åº“ï¼›macOS/Linux: é™æ€åº“ï¼‰
 if (WIN32)
     target_link_libraries(libslic3r_gui ${CMAKE_CURRENT_SOURCE_DIR}/../../deps/pgLibConnect/Lib/Windows/pgDllConnect.lib)
 elseif (APPLE)
     target_link_libraries(libslic3r_gui ${CMAKE_CURRENT_SOURCE_DIR}/../../deps/pgLibConnect/Lib/MacOSX/libconnect.a)
-    # libconnect.a ÄÚ²¿ÒÀÀµ DNS ½âÎö£¨res_9_init µÈ£©£¬ĞèÁ´½ÓÏµÍ³ libresolv
+    # libconnect.a å†…éƒ¨ä¾èµ– DNS è§£æï¼ˆres_9_init ç­‰ï¼‰ï¼Œéœ€é“¾æ¥ç³»ç»Ÿ libresolv
     target_link_libraries(libslic3r_gui resolv)
 elseif (UNIX)
     if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -769,7 +767,7 @@ elseif (UNIX)
     else ()
         target_link_libraries(libslic3r_gui ${CMAKE_CURRENT_SOURCE_DIR}/../../deps/pgLibConnect/Lib/Ubuntu/x32/libconnect.a)
     endif ()
-    # libconnect.a ÄÚ²¿ÒÀÀµ DNS ½âÎö£¨res_9_init µÈ£©£¬ĞèÁ´½ÓÏµÍ³ libresolv
+    # libconnect.a å†…éƒ¨ä¾èµ– DNS è§£æï¼ˆres_9_init ç­‰ï¼‰ï¼Œéœ€é“¾æ¥ç³»ç»Ÿ libresolv
     target_link_libraries(libslic3r_gui resolv)
 endif ()
 #target_link_libraries(libslic3r_gui libslic3r cereal imgui imguizmo minilzo GLEW::GLEW OpenGL::GL hidapi libcurl OpenSSL::SSL OpenSSL::Crypto ${wxWidgets_LIBRARIES} glfw)
