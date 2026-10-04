@@ -35,8 +35,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build Dependencies on Windows
+    - name: Cache Windows dependencies
       if: startsWith(matrix.os, 'windows-')
+      id: cache-deps
+      uses: actions/cache@v4
+      with:
+        path: deps/build/QIDIStudio_dep
+        key: qidistudio-win-deps-${{ runner.os }}-${{ hashFiles('deps/**/CMakeLists.txt', 'deps/**/*.cmake', 'deps/*.cmake') }}
+
+    - name: Build Dependencies on Windows
+      if: startsWith(matrix.os, 'windows-') && steps.cache-deps.outputs.cache-hit != 'true'
       shell: cmd
       run: |
           set CMAKE_TLS_VERIFY=0
