@@ -168,6 +168,11 @@ public:
     ExPolygons              loverhangs;
     std::vector<std::pair<ExPolygon, int>> loverhangs_with_type;
     BoundingBox             loverhangs_bbox;
+
+    // ASTO Wave: generated-wave footprints used by floor/support integration.
+    Polygons                wave_overhang_floor_polygons;
+    Polygons                wave_overhang_covered_polygons;
+    Polygons                wave_overhang_shadow_polygons;
     std::vector<LoopNode>   loop_nodes;
     size_t                  region_count() const { return m_regions.size(); }
     const LayerRegion*      get_region(int idx) const { return m_regions[idx]; }
