@@ -1863,7 +1863,7 @@ static wxString pad_combo_value_for_config(const DynamicPrintConfig &config)
     return config.opt_bool("pad_enable") ? (config.opt_bool("pad_around_object") ? _("Around object") : _("Below object")) : _("None");
 }
 
-// Éú³É²ÎÊıÃèÊöÎÄ°¸
+// ç”Ÿæˆå‚æ•°æè¿°æ–‡æ¡ˆ
 static wxString generate_support_param_description(const std::string& key, const ConfigOption* opt)
 {
     const ConfigOptionDef* def = print_config_def.get(key);
@@ -1970,8 +1970,8 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
     if (opt_key == "single_extruder_multi_material" || opt_key == "extruders_count" )
         update_wiping_button_visibility();
 
-    // QDS: ÓÃ»§ÔÚ UI ÉÏÖ÷¶¯¿ªÆôÖ§³ÅÊ±£¬Áª¶¯¿ªÆôÊ¶±ğĞü¿ÕÍâÇ½£¨¸¨ÖúÌåÑé£¬ÅäºÏÖ§³Å¿É¸ÄÉÆ´òÓ¡Ğ§¹û£©¡£
-    // preset ÇĞ»» / 3MF ¼ÓÔØ×ß Field::set_value(value, false) ²»»á½øÈë±¾»Øµ÷£¬ÒÑ´æÖµ²»»á±»¸²¸Ç¡£
+    // QDS: ç”¨æˆ·åœ¨ UI ä¸Šä¸»åŠ¨å¼€å¯æ”¯æ’‘æ—¶ï¼Œè”åŠ¨å¼€å¯è¯†åˆ«æ‚¬ç©ºå¤–å¢™ï¼ˆè¾…åŠ©ä½“éªŒï¼Œé…åˆæ”¯æ’‘å¯æ”¹å–„æ‰“å°æ•ˆæœï¼‰ã€‚
+    // preset åˆ‡æ¢ / 3MF åŠ è½½èµ° Field::set_value(value, false) ä¸ä¼šè¿›å…¥æœ¬å›è°ƒï¼Œå·²å­˜å€¼ä¸ä¼šè¢«è¦†ç›–ã€‚
     if (opt_key == "enable_support" && boost::any_cast<bool>(value)) {
         if (!m_config->opt_bool("detect_overhang_wall")) {
             DynamicPrintConfig new_conf = *m_config;
@@ -2083,7 +2083,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         if (bed_temperature_limit > 0 && bed_temperature_limit < BED_TEMP_LIMIT) {
             if (boost::any_cast<int>(value) > bed_temperature_limit) {
                 wxString msg_text = wxString::Format(
-                    _L("The selected printer has a bed temperature limit of %d¡ãC.\nSetting a higher bed temperature may cause damage to the printer."),
+                    _L("The selected printer has a bed temperature limit of %dÂ°C.\nSetting a higher bed temperature may cause damage to the printer."),
                     bed_temperature_limit);
                 MessageDialog dialog(wxGetApp().plater(), msg_text, "", wxICON_WARNING | wxOK);
                 dialog.ShowModal();
@@ -2195,13 +2195,13 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         }
     }
 
-    // µ±ÓÃ»§ĞŞ¸ÄÖ§³Å½Ó´¥ÃæºÄ²ÄÊ±£¬¼ì²éÊÇ·ñÓĞÍÆ¼öµÄ´òÓ¡²ÎÊı
+    // å½“ç”¨æˆ·ä¿®æ”¹æ”¯æ’‘æ¥è§¦é¢è€—ææ—¶ï¼Œæ£€æŸ¥æ˜¯å¦æœ‰æ¨èçš„æ‰“å°å‚æ•°
     if (opt_key == "support_interface_filament") {
         if (m_postpone_update_ui) {
             return;
         }
 
-        // Èç¹ûÊÇ±» support_filament handler µÄ apply ¼¶Áª´¥·¢µÄ£¬Ìø¹ıÍÆ¼öµ¯´°£¬±ÜÃâË«ÖØµ¯´°
+        // å¦‚æœæ˜¯è¢« support_filament handler çš„ apply çº§è”è§¦å‘çš„ï¼Œè·³è¿‡æ¨èå¼¹çª—ï¼Œé¿å…åŒé‡å¼¹çª—
         auto const &applying = m_config_manipulation.applying_keys();
         if (std::find(applying.begin(), applying.end(), "support_interface_filament") != applying.end()) {
             return;
@@ -2210,7 +2210,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         int filament_id           = m_config->opt_int("support_filament") - 1;
         int interface_filament_id = m_config->opt_int("support_interface_filament") - 1;
 
-        // »ñÈ¡Ö§³Å½Ó´¥ÃæºÄ²ÄĞÅÏ¢
+        // è·å–æ”¯æ’‘æ¥è§¦é¢è€—æä¿¡æ¯
         auto       &filament_presets = Slic3r::GUI::wxGetApp().preset_bundle->filament_presets;
         auto       &filaments        = Slic3r::GUI::wxGetApp().preset_bundle->filaments;
         std::string interface_filament_type;
@@ -2229,12 +2229,12 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         bool found_recommendation = false;
         bool from_json = false;
 
-        // ¸ù¾İ»úĞÍÅĞ¶ÏÊÇ·ñ³¢ÊÔ JSON ÍÆ¼ö²ÎÊı²éÑ¯£¨½ö X2D£©
+        // æ ¹æ®æœºå‹åˆ¤æ–­æ˜¯å¦å°è¯• JSON æ¨èå‚æ•°æŸ¥è¯¢ï¼ˆä»… X2Dï¼‰
         const Preset &current_printer = m_preset_bundle->printers.get_edited_preset();
         bool support_json_recommendation = current_printer.config.opt_string("printer_model") == "Bambu Lab X2D";
 
         if (support_json_recommendation) {
-            // ÊÕ¼¯µ±Ç°ÅÌËùÓĞÄ£ĞÍÊ¹ÓÃµÄËùÓĞºÄ²ÄÀàĞÍºÍÃû³Æ
+            // æ”¶é›†å½“å‰ç›˜æ‰€æœ‰æ¨¡å‹ä½¿ç”¨çš„æ‰€æœ‰è€—æç±»å‹å’Œåç§°
             auto &plate_list = Slic3r::GUI::wxGetApp().plater()->get_partplate_list();
             auto *curr_plate = plate_list.get_curr_plate();
             auto  model_objects = curr_plate->get_objects_on_this_plate();
@@ -2269,7 +2269,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
             bool same_type = (used_filament_types.size() == 1);
             bool same_name = (used_filament_names.size() == 1);
 
-            // Í¬Ãû³Æ»òÍ¬ÀàĞÍÊ±£¬²éÕÒÍÆ¼ö²ÎÊı
+            // åŒåç§°æˆ–åŒç±»å‹æ—¶ï¼ŒæŸ¥æ‰¾æ¨èå‚æ•°
             if (same_name || same_type) {
                 found_recommendation = query_support_recommended_params_for_combination(
                     interface_filament_id,
@@ -2279,13 +2279,13 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
 
                 if (found_recommendation) {
                     from_json = true;
-                    // ÏÔÊ¾Æ¥ÅäÉÏµÄÖ÷ÌåÁÏ£ºÓÅÏÈÓÃÃû³Æ£¬Æä´ÎÓÃÀàĞÍ
+                    // æ˜¾ç¤ºåŒ¹é…ä¸Šçš„ä¸»ä½“æ–™ï¼šä¼˜å…ˆç”¨åç§°ï¼Œå…¶æ¬¡ç”¨ç±»å‹
                     model_material_display_name = same_name ? first_filament_name : first_filament_type;
                 }
             }
         }
 
-        // JSON Ã»ÕÒµ½£¬×ßÓ²±àÂëÂ·¾¶
+        // JSON æ²¡æ‰¾åˆ°ï¼Œèµ°ç¡¬ç¼–ç è·¯å¾„
         if (!found_recommendation) {
             bool support_TPU          = interface_filament_type == "PLA" && has_filaments({"TPU", "TPU-AMS"});
             bool soluble_interface    = is_soluble_filament(interface_filament_id) && !is_soluble_filament(filament_id);
@@ -2318,7 +2318,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
         }
 
         if (found_recommendation && !recommended_conf.empty()) {
-            // ¹ıÂËµôµ±Ç°ÅäÖÃÒÑ¾­ÊÇÍÆ¼öÖµµÄ²ÎÊı
+            // è¿‡æ»¤æ‰å½“å‰é…ç½®å·²ç»æ˜¯æ¨èå€¼çš„å‚æ•°
             DynamicPrintConfig filtered_conf;
             for (const auto& key : recommended_conf.keys()) {
                 const ConfigOption* current_opt = m_config->option(key);
@@ -2331,7 +2331,7 @@ void Tab::on_value_change(const std::string& opt_key, const boost::any& value)
             if (!filtered_conf.empty()) {
                 wxString msg_header;
                 if (from_json) {
-                    // JSON ÍÆ¼ö£ºÏÔÊ¾Ö§³ÅÁÏÃû³ÆºÍÆ¥ÅäµÄÖ÷ÌåÁÏ
+                    // JSON æ¨èï¼šæ˜¾ç¤ºæ”¯æ’‘æ–™åç§°å’ŒåŒ¹é…çš„ä¸»ä½“æ–™
                     msg_header = wxString::Format(_L("When using %s to support %s, We recommend the following settings:"), wxString::FromUTF8(support_material_display_name), wxString::FromUTF8(model_material_display_name));
                 } else if (support_material_display_name == "PLA" && has_filaments({"TPU", "TPU-AMS"})) {
                     msg_header = _L("When using PLA to support TPU, We recommend the following settings:");
@@ -3028,6 +3028,69 @@ void TabPrint::build()
         optgroup->append_single_option_line("max_travel_detour_distance","print-settings/quality-advance-settings");
         optgroup->append_single_option_line("avoid_crossing_wall_includes_support","print-settings/quality-advance-settings");
         optgroup->append_single_option_line("z_direction_outwall_speed_continuous", "print-settings/quality-advance-settings");
+
+    // two opt-in sub-features (Corner reinforcement here, Hilbert under Floor
+    // layers) both follow a master-toggle + reveal-sub-options pattern so
+    // they're structurally consistent.
+    page = add_options_page(L("Wave overhangs"), "custom-gcode_quality");
+        optgroup = page->new_optgroup(L("General"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhangs");
+        optgroup->append_single_option_line("wave_overhangs_instead_of_bridges");
+        optgroup->append_single_option_line("support_remaining_areas_after_wave_overhangs");
+
+        optgroup = page->new_optgroup(L("Detection"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhang_min_angle");
+        optgroup->append_single_option_line("wave_overhang_min_length");
+        optgroup->append_single_option_line("wave_overhang_max_iterations");
+
+        // Pattern: how the wave is shaped.
+        optgroup = page->new_optgroup(L("Pattern"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhang_pattern");
+        optgroup->append_single_option_line("wave_overhang_seam_mode");
+        optgroup->append_single_option_line("wave_overhang_outer_perimeters");
+        optgroup->append_single_option_line("wave_overhang_line_spacing");
+        optgroup->append_single_option_line("wave_overhang_spacing_mode");
+        optgroup->append_single_option_line("wave_overhang_perimeter_overlap");
+        optgroup->append_single_option_line("wave_overhang_minimum_width");
+        optgroup->append_single_option_line("wave_overhang_min_new_area");
+        optgroup->append_single_option_line("wave_overhang_flow_mm3_per_mm");
+
+        // Corner reinforcement: opt-in feature. Master toggle reveals the
+        // three tunables (matches the pattern used by Hilbert under Floor
+        // layers). ConfigManipulation gates the sub-options on the master
+        // toggle so the sub-rows hide cleanly when off.
+        optgroup = page->new_optgroup(L("Corner reinforcement"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhang_corner_taper_enable");
+        optgroup->append_single_option_line("wave_overhang_line_spacing_corner");
+        optgroup->append_single_option_line("wave_overhang_corner_taper_distance");
+        optgroup->append_single_option_line("wave_overhang_corner_angle_threshold");
+
+        optgroup = page->new_optgroup(L("Motion"), L"param_speed");
+        optgroup->append_single_option_line("wave_overhang_print_speed");
+        optgroup->append_single_option_line("wave_overhang_perimeter_speed");
+        optgroup->append_single_option_line("wave_overhang_travel_speed");
+        optgroup->append_single_option_line("wave_overhang_end_retract_length");
+
+        optgroup = page->new_optgroup(L("Cooling"), L"param_cooling");
+        optgroup->append_single_option_line("wave_overhang_fan_speed");
+        optgroup->append_single_option_line("wave_overhang_aux_fan_speed");
+        optgroup->append_single_option_line("wave_overhang_nozzle_temp");
+        optgroup->append_single_option_line("wave_overhang_min_wave_time");
+        optgroup->append_single_option_line("wave_overhang_min_layer_time");
+
+        optgroup = page->new_optgroup(L("Floor layers"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhang_floor_layers");
+        optgroup->append_single_option_line("wave_overhang_floor_use_hilbert");
+        optgroup->append_single_option_line("wave_overhang_floor_hilbert_layers");
+        optgroup->append_single_option_line("wave_overhang_floor_hilbert_density");
+        optgroup->append_single_option_line("wave_overhang_floor_print_speed");
+        optgroup->append_single_option_line("wave_overhang_floor_perimeter_speed");
+        optgroup->append_single_option_line("wave_overhang_floor_speed_ramp");
+        optgroup->append_single_option_line("wave_overhang_floor_fan_speed");
+        optgroup->append_single_option_line("wave_overhang_floor_aux_fan_speed");
+
+        optgroup = page->new_optgroup(L("Debug"), L"param_overhang");
+        optgroup->append_single_option_line("wave_overhang_debug_gcode");
 
     page = add_options_page(L("Strength"), "empty");
         optgroup = page->new_optgroup(L("Walls"), L"param_wall");

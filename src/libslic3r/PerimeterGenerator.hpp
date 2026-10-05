@@ -63,6 +63,10 @@ public:
     std::pair<double, double>   m_smaller_external_overhang_dist_boundary;
     std::vector<LoopNode>       *loop_nodes;
 
+    // ASTO Wave: footprints emitted by the wave generator; forwarded by LayerRegion.
+    Polygons                    out_wave_overhang_floor_polygons;
+    Polygons                    out_wave_overhang_covered_polygons;
+
     PerimeterGenerator(
         // Input:
         const SurfaceCollection*    slices,
